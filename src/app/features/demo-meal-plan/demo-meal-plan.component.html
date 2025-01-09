@@ -1,0 +1,147 @@
+<div class="min-h-screen bg-gray-50 pt-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">3-Day Meal Plan</h1>
+          <div class="flex items-center gap-4 text-gray-600">
+            <div class="flex items-center gap-2">
+              <lucide-icon [name]="icons.Calendar" class="w-4 h-4"></lucide-icon>
+              <span>Created {{formatDate(demoMealPlan.createdAt)}}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <lucide-icon [name]="icons.Scale" class="w-4 h-4"></lucide-icon>
+              <span>BMI: {{demoMealPlan.bmi}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let diet of demoMealPlan.listOfDiets" class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+            {{diet}}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day Navigation -->
+    <div class="flex space-x-4 mb-8">
+      <button
+        *ngFor="let day of demoMealPlan.mealPlan"
+        (click)="setActiveDay(day.day)"
+        [class]="'px-6 py-3 rounded-lg font-medium transition-colors ' + 
+          (activeDay === day.day ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 hover:bg-blue-50')"
+      >
+        Day {{day.day}}
+      </button>
+    </div>
+
+    <ng-container *ngIf="currentDayPlan">
+      <!-- Daily Summary -->
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Daily Summary</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <div class="text-sm text-blue-600 mb-1">Total Calories</div>
+            <div class="text-2xl font-bold text-blue-900">{{currentDayPlan.totalDailyCalories}}</div>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg">
+            <div class="text-sm text-green-600 mb-1">Carbohydrates</div>
+            <div class="text-2xl font-bold text-green-900">{{currentDayPlan.nutritionalBreakdown.carbohydrates}}</div>
+          </div>
+          <div class="bg-yellow-50 p-4 rounded-lg">
+            <div class="text-sm text-yellow-600 mb-1">Proteins</div>
+            <div class="text-2xl font-bold text-yellow-900">{{currentDayPlan.nutritionalBreakdown.proteins}}</div>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-lg">
+            <div class="text-sm text-purple-600 mb-1">Fats</div>
+            <div class="text-2xl font-bold text-purple-900">{{currentDayPlan.nutritionalBreakdown.fats}}</div>
+          </div>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="font-medium text-gray-900 mb-2">Health Benefits</h3>
+          <ul class="space-y-2">
+            <li *ngFor="let benefit of currentDayPlan.healthBenefits" class="flex items-center gap-2 text-gray-600">
+              <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+              {{benefit}}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Meals -->
+      <div class="space-y-6 mt-8">
+        <ng-container *ngFor="let [mealType, meal] of getMealEntries(currentDayPlan.meals)">
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="p-6">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 capitalize mb-1">
+                    {{mealType}}
+                  </h3>
+                  <div class="text-lg text-gray-900">{{meal.name}}</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <lucide-icon [name]="icons.Clock" class="w-4 h-4 text-gray-500"></lucide-icon>
+                  <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full">
+                    {{meal.calories}} cal
+                  </span>
+                </div>
+              </div>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-medium text-gray-900 mb-2">Ingredients</h4>
+                  <ul class="space-y-2">
+                    <li *ngFor="let ingredient of meal.ingredients" class="flex items-center gap-2 text-gray-600">
+                      <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                      {{ingredient}}
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-medium text-gray-900 mb-2">Instructions</h4>
+                  <p class="text-gray-600">{{meal.instructions}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Snacks Section -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Snacks</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div *ngFor="let snack of currentDayPlan.meals.snacks" class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                  <div class="font-medium text-gray-900">{{snack.name}}</div>
+                  <div class="text-sm text-purple-600">{{snack.calories}} cal</div>
+                </div>
+                <div class="space-y-3">
+                  <div>
+                    <div class="text-sm font-medium text-gray-700 mb-1">
+                      Ingredients
+                    </div>
+                    <ul class="text-sm text-gray-600">
+                      <li *ngFor="let ingredient of snack.ingredients" class="flex items-center gap-2">
+                        <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
+                        {{ingredient}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-gray-700 mb-1">
+                      Instructions
+                    </div>
+                    <p class="text-sm text-gray-600">{{snack.instructions}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
