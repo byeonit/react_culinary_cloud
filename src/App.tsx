@@ -11,6 +11,11 @@ import Blog from './pages/Blog';
 import Culinary from './pages/features/Culinary';
 import Macro from './pages/features/Macro';
 import Meal from './pages/features/Meal';
+import DemoCulinaryRecipe from './pages/features/DemoCulinaryRecipe';
+import DemoMacroRecipe from './pages/features/DemoMacroRecipe';
+import DemoMealPlanner from './pages/features/DemoMealPlanner';
+import DemoMealPlanHistoric from './pages/features/DemoMealPlanHistoric';
+import MacroMealPlanHistory from './pages/features/MacroMealPlanHistory';
 
 function App() {
   return (
@@ -25,6 +30,11 @@ function App() {
           <Route path="recipe/:id" element={<Recipe />} />
           <Route path="blog" element={<Blog />} />
           <Route path="features/culinary" element={<Culinary />} />
+          <Route path="features/demo-recipe" element={<DemoCulinaryRecipe />} />
+          <Route path="features/demo-macro-recipe" element={<DemoMacroRecipe />} />
+          <Route path="features/demo-meal-planner" element={<DemoMealPlanner />} />
+          <Route path="features/demo-meal-planner-historic" element={<DemoMealPlanHistoric />} />
+          <Route path="features/macro-meal-plan-history" element={<MacroMealPlanHistory />} />
           <Route path="features/macro" element={<Macro />} />
           <Route path="features/meal" element={<Meal />} />
         </Route>

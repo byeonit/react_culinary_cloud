@@ -1,33 +1,64 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Utensils, Scale, CalendarDays } from 'lucide-react';
+import {
+  ChevronDown,
+  Utensils,
+  Scale,
+  CalendarDays,
+  ChefHat,
+  Brain,
+  History
+} from 'lucide-react';
 
-interface SubMenuItem {
-  label: string;
-  description: string;
-  icon: React.ElementType;
-  href: string;
-}
-
-const subMenuItems: SubMenuItem[] = [
+const subMenuItems = [
   {
     label: 'Culinary',
     description: 'Expert cooking techniques and tips',
     icon: Utensils,
-    href: '/features/culinary'
+    href: '/features/culinary',
+  },
+  {
+    label: 'Demo Recipe',
+    description: 'View AI generated recipe example',
+    icon: ChefHat,
+    href: '/features/demo-recipe',
+  },
+  {
+    label: 'Demo Macro Recipe',
+    description: 'View AI generated macro recipe',
+    icon: Brain,
+    href: '/features/demo-macro-recipe',
+  },
+  {
+    label: 'Demo Meal Planner',
+    description: 'View sample meal plan',
+    icon: CalendarDays,
+    href: '/features/demo-meal-planner',
+  },
+  {
+    label: 'Demo Meal Plan History',
+    description: 'View meal plan history',
+    icon: History,
+    href: '/features/demo-meal-planner-historic',
   },
   {
     label: 'Macro',
     description: 'Nutritional tracking and analysis',
     icon: Scale,
-    href: '/features/macro'
+    href: '/features/macro',
+  },
+  {
+    label: 'Macro Meal Plan History',
+    description: 'View macro meal plan history',
+    icon: History,
+    href: '/features/macro-meal-plan-history',
   },
   {
     label: 'Meal',
     description: 'Weekly meal planning tools',
     icon: CalendarDays,
-    href: '/features/meal'
-  }
+    href: '/features/meal',
+  },
 ];
 
 export default function FeatureDropdown() {
@@ -45,7 +76,7 @@ export default function FeatureDropdown() {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setIsOpen(false);
-    }, 150); // Small delay before closing
+    }, 150);
   };
 
   useEffect(() => {
@@ -57,15 +88,13 @@ export default function FeatureDropdown() {
   }, []);
 
   return (
-    <div 
+    <div
       ref={dropdownRef}
       className="relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <button
-        className="flex items-center gap-1 text-gray-600 hover:text-orange-500 transition-colors py-2"
-      >
+      <button className="flex items-center gap-1 text-gray-600 hover:text-orange-500 transition-colors py-2">
         Features
         <ChevronDown className="w-4 h-4" />
       </button>
