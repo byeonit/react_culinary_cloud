@@ -1,0 +1,125 @@
+```html
+<div class="min-h-screen bg-gray-50 pt-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">Your Macro Meal Plan</h1>
+      <p class="text-gray-600">A personalized nutrition plan to help you reach your goals</p>
+    </div>
+
+    <!-- Day Tabs -->
+    <div class="flex space-x-4 mb-8">
+      <button
+        *ngFor="let day of dummyMacroPlan | keyvalue"
+        (click)="setActiveDay(day.key)"
+        [class]="'px-6 py-3 rounded-lg font-medium transition-colors ' + 
+          (activeDay === day.key ? 'bg-blue-500 text-white' : 'bg-white text-gray-600 hover:bg-blue-50')"
+      >
+        {{day.key}}
+      </button>
+    </div>
+
+    <ng-container *ngIf="currentDayPlan">
+      <!-- Macros Summary -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <div class="flex items-center gap-2 mb-4">
+          <lucide-icon [icon]="icons.Scale" class="w-5 h-5 text-blue-500"></lucide-icon>
+          <h2 class="text-xl font-semibold">Daily Macros</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <!-- Macro cards -->
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <div class="text-sm text-blue-600 mb-1">Protein</div>
+            <div class="text-2xl font-bold text-blue-900">{{currentDayPlan['Daily Macros'].Protein}}</div>
+          </div>
+          <!-- Similar cards for Carbs, Fats, Calories -->
+        </div>
+      </div>
+
+      <!-- Meals -->
+      <div class="space-y-6">
+        <div *ngFor="let meal of currentMeals" class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <!-- Meal content -->
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-semibold text-gray-900">{{meal['Meal Name']}}</h3>
+              <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">
+                {{meal['Total Macros'].Calories}} cal
+              </span>
+            </div>
+
+            <!-- Grid layout for meal details -->
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- Left Column -->
+              <div class="space-y-6">
+                <!-- Ingredients -->
+                <div>
+                  <h4 class="font-medium text-gray-900 mb-2">Ingredients</h4>
+                  <div class="space-y-2">
+                    <div *ngFor="let ingredient of meal.Ingredients | keyvalue" class="bg-gray-50 p-3 rounded-lg">
+                      <!-- Ingredient details -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Instructions -->
+                <div>
+                  <h4 class="font-medium text-gray-900 mb-2">Instructions</h4>
+                  <ol class="space-y-2">
+                    <li *ngFor="let instruction of meal.Instructions; let i = index" class="text-gray-600">
+                      {{i + 1}}. {{instruction}}
+                    </li>
+                  </ol>
+                </div>
+              </div>
+
+              <!-- Right Column -->
+              <div class="space-y-6">
+                <!-- Nutritional Breakdown -->
+                <div>
+                  <h4 class="font-medium text-gray-900 mb-2">Nutritional Breakdown</h4>
+                  <div class="space-y-2">
+                    <div *ngFor="let breakdown of meal['Nutritional Breakdown'] | keyvalue" 
+                         class="bg-gray-50 p-3 rounded-lg">
+                      <!-- Breakdown details -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Health Benefits -->
+                <div class="bg-green-50 p-4 rounded-lg">
+                  <div class="flex items-center gap-2 mb-2">
+                    <lucide-icon [icon]="icons.Info" class="w-5 h-5 text-green-500"></lucide-icon>
+                    <h4 class="font-medium text-green-900">Health Benefits</h4>
+                  </div>
+                  <p class="text-green-700">{{meal['Health Benefits']}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-4 mt-8">
+        <button
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+          class="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <lucide-icon [icon]="icons.ChevronLeft" class="w-5 h-5"></lucide-icon>
+        </button>
+        <span class="text-gray-600">
+          Page {{currentPage}} of {{totalPages}}
+        </span>
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <lucide-icon [icon]="icons.ChevronRight" class="w-5 h-5"></lucide-icon>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>
+```
