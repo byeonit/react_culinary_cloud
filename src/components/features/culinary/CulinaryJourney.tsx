@@ -18,16 +18,23 @@ interface CulinaryJourneyProps {
   onComplete: () => void;
 }
 
-export default function CulinaryJourney({ onBack, onComplete }: CulinaryJourneyProps) {
+export default function CulinaryJourney({
+  onBack,
+  onComplete,
+}: CulinaryJourneyProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
-  const [selectedPortionSize, setSelectedPortionSize] = useState<string | null>(null);
+  const [selectedPortionSize, setSelectedPortionSize] = useState<string | null>(
+    null
+  );
   const [customServings, setCustomServings] = useState(2);
   const [cookingTime, setCookingTime] = useState(30);
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
-  const [selectedSkillLevel, setSelectedSkillLevel] = useState<string | null>(null);
+  const [selectedSkillLevel, setSelectedSkillLevel] = useState<string | null>(
+    null
+  );
 
   const { saveRecipeData, loading, error } = useRecipeGeneration();
 
@@ -60,17 +67,18 @@ export default function CulinaryJourney({ onBack, onComplete }: CulinaryJourneyP
         mealType: selectedMeal || '',
         cookingMethod: selectedMethod || '',
         portionSize: selectedPortionSize || '',
-        customServings: selectedPortionSize === 'custom' ? customServings : undefined,
+        customServings:
+          selectedPortionSize === 'custom' ? customServings : undefined,
         cookingTime,
         dietaryPreferences: selectedPreferences,
-        skillLevel: selectedSkillLevel || ''
+        skillLevel: selectedSkillLevel || '',
       });
 
       if (success) {
         onComplete();
       }
     } else {
-      setCurrentStep(current => current + 1);
+      setCurrentStep((current) => current + 1);
     }
   };
 
@@ -78,7 +86,7 @@ export default function CulinaryJourney({ onBack, onComplete }: CulinaryJourneyP
     if (currentStep === 1) {
       onBack();
     } else {
-      setCurrentStep(current => current - 1);
+      setCurrentStep((current) => current - 1);
     }
   };
 
@@ -86,18 +94,136 @@ export default function CulinaryJourney({ onBack, onComplete }: CulinaryJourneyP
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Steps Progress */}
-        <StepGrid steps={journeySteps} currentStep={currentStep} />
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Culinary Plan Creation
+            </h2>
+            <div className="text-sm text-gray-600">
+              Step {currentStep} of {journeySteps.length}
+            </div>
+          </div>
+          <StepGrid steps={journeySteps} currentStep={currentStep} />
+        </div>
 
         {/* Main Content Area */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-8 mt-8">
           <div className="p-8">
-            {/* Step Content */}
-            {/* ... (existing step content) ... */}
+            {currentStep === 1 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Select Your Ingredients"
+                  description="Choose the ingredients you have available"
+                />
+                <div className="space-y-6">
+                  <SelectedIngredients
+                    selectedIngredients={selectedIngredients}
+                    onRemove={(ingredient) =>
+                      setSelectedIngredients((current) =>
+                        current.filter((i) => i !== ingredient)
+                      )
+                    }
+                  />
+                  <IngredientSelector
+                    selectedIngredients={selectedIngredients}
+                    onIngredientsChange={setSelectedIngredients}
+                  />
+                </div>
+              </>
+            )}
 
-            {error && (
-              <div className="mt-4 p-4 bg-red-50 rounded-lg text-red-600 text-sm">
-                {error}
-              </div>
+            {currentStep === 2 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Choose Meal Type"
+                  description="Select the type of meal you want to prepare"
+                />
+                <MealTypeSelector
+                  selectedMeal={selectedMeal}
+                  onSelect={setSelectedMeal}
+                />
+              </>
+            )}
+
+            {currentStep === 3 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Cooking Method"
+                  description="How would you like to cook your meal?"
+                />
+                <CookingMethodSelector
+                  selectedMethod={selectedMethod}
+                  onSelect={setSelectedMethod}
+                />
+              </>
+            )}
+
+            {currentStep === 4 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Portion Size"
+                  description="How many servings do you need?"
+                />
+                <PortionSelector
+                  selectedSize={selectedPortionSize}
+                  customServings={customServings}
+                  onSelect={setSelectedPortionSize}
+                  onCustomServingsChange={setCustomServings}
+                />
+              </>
+            )}
+
+            {currentStep === 5 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Cooking Time"
+                  description="How much time do you have available?"
+                />
+                <TimeSelector
+                  selectedTime={cookingTime}
+                  onTimeChange={setCookingTime}
+                />
+              </>
+            )}
+
+            {currentStep === 6 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Dietary Preferences"
+                  description="Any dietary restrictions or preferences?"
+                />
+                <PreferencesSelector
+                  selectedPreferences={selectedPreferences}
+                  onPreferencesChange={setSelectedPreferences}
+                />
+              </>
+            )}
+
+            {currentStep === 7 && (
+              <>
+                <StepHeader
+                  currentStep={currentStep}
+                  totalSteps={journeySteps.length}
+                  title="Cooking Expertise"
+                  description="What's your skill level in the kitchen?"
+                />
+                <SkillLevelSelector
+                  selectedLevel={selectedSkillLevel}
+                  onSelect={setSelectedSkillLevel}
+                />
+              </>
             )}
           </div>
 
@@ -120,10 +246,16 @@ export default function CulinaryJourney({ onBack, onComplete }: CulinaryJourneyP
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }`}
             >
-              {loading ? 'Processing...' : currentStep === journeySteps.length ? 'Generate Recipe' : 'Next Step'}
+              {loading
+                ? 'Processing...'
+                : currentStep === journeySteps.length
+                ? 'Generate Recipe'
+                : 'Next Step'}
             </button>
           </div>
         </div>
+
+        {error && <div className="text-red-500 text-center mt-4">{error}</div>}
       </div>
     </div>
   );
